@@ -30,19 +30,19 @@ function Home() {
     return (
       <>
       
-        {movies.map((movie,id)=>{
-          return(
-           <Link to={`/details/${movie.id}`}>
-            <MovieCard key={id}
-                poster = {movie.poster_path}
-                title = {movie.title}
-                rating = {movie.vote_average}
+       {movies
+       .filter(movies => movies.adult ===false)
+       .map((movie,id)=> {
+            return(
+                <MovieCard key={id}
+                poster={movie.poster_path}
+                title={movie.title}
+                rating={movie.vote_average}
             
-            
-            />
-           </Link> 
-        )
-        })}
+                />
+            )
+       })
+       }
        
       </>
       
