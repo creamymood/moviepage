@@ -4,7 +4,7 @@ import Input from "../components/Input";
 import { Navigate, useNavigate } from "react-router-dom";
 
 
-function Login() {
+function Login({isLoggedIn, setIsLoggedIn}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -54,6 +54,7 @@ function Login() {
     if (email === "test@test.com" && password === "123456") {
       alert("로그인 성공");
       navigate("/");
+      setIsLoggedIn(true)
     } else {
       alert("아이디 또는 비밀번호가 잘못되었습니다.");
     }
