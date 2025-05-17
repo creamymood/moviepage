@@ -5,6 +5,7 @@ import MovieDetail from './page/MovieDetail';
 import Layout from './components/Layout';
 import Login from './page/Login';
 import Join from './page/Join';
+import Search from './page/Search';
 
 
 
@@ -16,8 +17,9 @@ function App() {
         <Route path='/' element={<Layout/>}>
           <Route index element={<Home/>} />
           <Route path='/details/:id' element={<MovieDetail/>} />
-          <Route path='/join' element={<Login/>} />
-          <Route path='/login' element={<Join/>} />
+          <Route path='/join' element={<Join/>} />
+          <Route path='/login' element={<Login/>} />
+          <Route path='/search' element={<Search/>} />
 
         </Route>
       </Routes>

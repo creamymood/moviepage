@@ -28,28 +28,27 @@ function Home() {
     
   
     return (
-      <>
-      
-       {movies
-       .filter(movies => movies.adult ===false)
-       .map((movie,id)=> {
-            return(
-                <Link to={`/details/${movie.id}`}>
-                    <MovieCard key={id}
+      <div className="min-h-screen bg-gray-950 text-white px-4 py-8">
+        <h1 className="text-4xl font-bold mb-8 text-center text-yellow-400">🎬 Popular Movies</h1>
+    
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-6">
+          {movies
+            .filter(movies => movies.adult === false)
+            .map((movie, id) => {
+              return (
+                <Link to={`/details/${movie.id}`} key={id}>
+                  <MovieCard
                     poster={movie.poster_path}
                     title={movie.title}
                     rating={movie.vote_average}
-                
-                
-                    />
-                 </Link>
-            )
-       })
-       }
-       
-      </>
-      
-    )
+                  />
+                </Link>
+              );
+            })}
+        </div>
+      </div>
+    );
+    
     
 
   }
