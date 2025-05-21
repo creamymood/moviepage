@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../components/Input";
+import { useSupabaseAuth } from "../supabase";
 
 function Join() {
     const [email, setEmail] = useState("");
@@ -14,6 +15,8 @@ function Join() {
 
 
     const navigate = useNavigate();
+    
+    const { signUp } = useSupabaseAuth()
   
   
   
@@ -96,18 +99,36 @@ function Join() {
   
     
     
-    const handleJoin = () => {
-      if (!emailError && !passwordError && !nameError && email && password && name && confirmPassword && !confirmPasswordError) {
-        alert("회원가입 성공, 로그인 창으로 넘어갑니다.");
+    const handleJoin = async () => {
+    //   if (!emailError && !passwordError && !nameError && email && password && name && confirmPassword && !confirmPasswordError) {
+    //     alert("회원가입 성공, 로그인 창으로 넘어갑니다.");
+    //     navigate("/login");
+    //   } 
+
+        const { data, error } = await signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name, // user metadata로 저장됨
+        },
+      },
+    })
+
+    if (error) {
+      alert('회원가입 에러:', error.message)
+    } else {
+        console.log("회원가입 성공:", data);
+        alert("회원가입 성공! 이메일 인증 까지 완료 해주셔야 합니다.");
         navigate("/login");
-      } 
+    }
     };
     
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
     
       if (!emailError && !passwordError && !nameError && email && password && name && confirmPassword && !confirmPasswordError) {
-        handleJoin();
+        await handleJoin();
       } else {
         alert("입력한 값을 다시 확인해주세요.");
       }

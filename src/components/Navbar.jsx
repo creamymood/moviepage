@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Join from "../page/Join";
-import Login from "../page/Login";
 import { Link, useNavigate } from "react-router-dom";
 import ThumbnailMenu from "./ThumbnailMenu";
+import { useUser } from "../context/UserContextProvider";
 
 // useBounce 훅 만들기. 
 function useDebounce (value, delay) {
@@ -22,13 +21,12 @@ function useDebounce (value, delay) {
 
 
 
-function Navbar({isLoggedIn, setIsLoggedIn}) {
+function Navbar() {
     const [inputValue, setInputValue ] = useState('')
     const debouncedFinal = useDebounce(inputValue,1000)
     const navigate = useNavigate()
+    const { loggedIn } = useUser()
 
-
-    
    
 
 
@@ -37,13 +35,12 @@ function Navbar({isLoggedIn, setIsLoggedIn}) {
             navigate(`/search?q=${debouncedFinal}`)
             setInputValue('')
            
-        }
-        
-    },[debouncedFinal, navigate])
+        }},[debouncedFinal, navigate])
+
+
 
     const handleLogoClick = () => {
-        
-        navigate('/')}; // URL의 ?q=... 제거됨
+         navigate('/')}; // URL의 ?q=... 제거됨
 
     
 
@@ -55,7 +52,7 @@ function Navbar({isLoggedIn, setIsLoggedIn}) {
             
             <input type="검색" value={inputValue} onChange={(e)=>setInputValue(e.target.value)}/>
             
-            {isLoggedIn ? (<ThumbnailMenu setIsLoggedIn={setIsLoggedIn}/> ) : (
+            {loggedIn ? (<ThumbnailMenu/> ) : (
             
             <>
             <Link to="/join">

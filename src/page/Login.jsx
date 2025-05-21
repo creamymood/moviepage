@@ -2,14 +2,20 @@
 import React, { useState } from "react";
 import Input from "../components/Input";
 import { Navigate, useNavigate } from "react-router-dom";
+import { useSupabaseAuth } from "../supabase";
+import { useUser } from "../context/UserContextProvider";
 
 
-function Login({isLoggedIn, setIsLoggedIn}) {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
+  const { login, loginWithKakao, loginWithGoogle } = useSupabaseAuth();
+  const { loggedIn, setLoggedIn } = useUser()
+  
+  
 
 
 
@@ -49,26 +55,75 @@ function Login({isLoggedIn, setIsLoggedIn}) {
   };
 
   
-  
-  const handleLogin = () => {
-    if (email === "test@test.com" && password === "123456") {
-      alert("로그인 성공");
-      navigate("/");
-      setIsLoggedIn(true)
+  const handleLogin = async () => {
+    // if (email === "test@test.com" && password === "123456") {
+    //   alert("로그인 성공");
+    //   navigate("/");
+    //   //로그인 한 것 상태 관리
+    //   setIsLoggedIn(true)
+    // } else {
+    //   alert("아이디 또는 비밀번호가 잘못되었습니다.");
+    // }
+
+    const { data, error } = await login({
+      email,
+      password,
+      options: {
+        data: {
+         
+        },
+      },
+    })
+
+    if (error) {
+      alert('로그인 에러:', error.message)
     } else {
-      alert("아이디 또는 비밀번호가 잘못되었습니다.");
+        console.log("로그인 성공:", data);
+        alert("로그인 성공!");
+        setLoggedIn(true)
+        navigate("/");
     }
   };
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
   
     if (!emailError && !passwordError && email && password) {
-      handleLogin();
+      await handleLogin();
     } else {
       alert("입력한 값을 다시 확인해주세요.");
     }
   };
+
+ 
+
+  const handleLoginWithKakao = async () => {
+    try {
+      await loginWithKakao('https://yaliidhzxyxpaumcoyhl.supabase.co/auth/v1/callback');
+      setLoggedIn(true);
+    
+    } catch (error) {
+      console.error("Error during Kakao login:", error);
+      alert("카카오 로그인에 실패했습니다. 다시 시도해주세요.");
+    }
+    
+
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle('https://yaliidhzxyxpaumcoyhl.supabase.co/auth/v1/callback');
+      setLoggedIn(true);
+    
+    } catch (error) {
+      console.error("Error during Kakao login:", error);
+      alert("카카오 로그인에 실패했습니다. 다시 시도해주세요.");
+    }
+    
+
+  };
+  
+  
   
 
   return (
@@ -103,6 +158,9 @@ function Login({isLoggedIn, setIsLoggedIn}) {
           로그인
         </button>
       </form>
+      <button onClick={handleLoginWithKakao}>카카오톡으로 로그인하기</button>
+      <button onClick={handleGoogleLogin}>구글로 로그인하기</button>
+
     </div>
   );
 }
